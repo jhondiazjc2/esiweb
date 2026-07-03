@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ESIWeb Colombia
 
-## Getting Started
+Plataforma educativa de **Equipando Siervos Internacional** para Colombia.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [Next.js 16](https://nextjs.org/) + TypeScript
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Supabase](https://supabase.com/) — auth, base de datos y almacenamiento
+- [Vercel](https://vercel.com/) — hosting gratuito recomendado
+
+## Estructura
+
+```
+ESIWeb/
+├── Primer modulo/          # PDFs del Módulo 1 (material local)
+├── src/
+│   ├── app/
+│   │   ├── (public)/       # Inicio, misión, grupos, contacto
+│   │   ├── login/          # Inicio de sesión
+│   │   └── dashboard/      # Área privada (estudiante, facilitador, admin)
+│   └── lib/                # Datos, Supabase, tipos
+└── supabase/migrations/    # Esquema SQL
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Desarrollo local
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd C:\ESIWeb
+npm install
+cp .env.example .env.local   # configurar Supabase (opcional para demo)
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Abre [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+**Sin Supabase configurado:** la sección pública funciona y el dashboard abre en modo demo.
 
-To learn more about Next.js, take a look at the following resources:
+**Con Supabase:** copia `.env.example` a `.env.local`, ejecuta el SQL en `supabase/migrations/001_initial_schema.sql` y crea usuarios desde el panel de Supabase Auth.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Material del Módulo 1
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Los PDFs en `Primer modulo/` se sirven vía `/api/material/[id]`. Para producción, súbelos al bucket `materiales` de Supabase Storage.
 
-## Deploy on Vercel
+## Roles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Rol | Permisos |
+|-----|----------|
+| **Estudiante** | Ver y descargar material de su módulo |
+| **Facilitador** | Crear estudiantes, registrar notas |
+| **Admin** | Gestionar sedes, subir/editar material |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Despliegue en Vercel (gratis)
+
+1. Sube el repo a GitHub
+2. Importa en [vercel.com/new](https://vercel.com/new)
+3. Agrega las variables de entorno de `.env.example`
+4. En Supabase → Authentication → URL Configuration, agrega tu dominio Vercel
+
+## Próximos pasos
+
+- [ ] Conectar formulario de contacto a correo o Supabase
+- [ ] Subir PDFs a Supabase Storage
+- [ ] CRUD de estudiantes y notas para facilitadores
+- [ ] Panel admin para sedes y material
+- [ ] Módulos 2–6
