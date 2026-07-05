@@ -54,7 +54,7 @@ function getNavItems(role: UserRole) {
   if (role === "admin") {
     common.push(
       { href: "/dashboard/admin/sedes", label: "Sedes", icon: Building2 },
-      { href: "/dashboard/admin/material", label: "Material", icon: BookOpen },
+      { href: "/dashboard/admin/modulos", label: "Módulos", icon: BookOpen },
     );
   }
 

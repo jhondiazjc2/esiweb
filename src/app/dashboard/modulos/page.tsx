@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { modulos } from "@/lib/data/modulos";
+import { getModulos } from "@/lib/modules/queries";
 import { getSessionProfile } from "@/lib/auth";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,32 +11,35 @@ import {
 
 export default async function ModulosPage() {
   const profile = await getSessionProfile();
+  const modulos = await getModulos();
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Módulos</h1>
         <p className="mt-1 text-muted-foreground">
-          Seis semestres del programa ESI de tres años
+          Semestres del programa ESI de tres años
         </p>
       </div>
 
       <div className="grid gap-4">
         {modulos.map((modulo) => {
           const disponible =
-            modulo.id === 1 || profile.role === "admin";
+            profile.role === "admin" || modulo.activo !== false;
           const enCurso = modulo.id === profile.modulo_actual;
 
           return (
             <Card
               key={modulo.id}
-              className={disponible ? "transition-colors hover:bg-muted/30" : "opacity-60"}
+              className={
+                disponible
+                  ? "transition-colors hover:bg-muted/30"
+                  : "opacity-60"
+              }
             >
               <Link
                 href={
-                  disponible
-                    ? `/dashboard/modulos/${modulo.id}`
-                    : "#"
+                  disponible ? `/dashboard/modulos/${modulo.id}` : "#"
                 }
                 className={disponible ? "" : "pointer-events-none"}
               >

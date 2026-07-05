@@ -4,7 +4,11 @@ export type MaterialCategory =
   | "cronograma"
   | "paquete"
   | "lectura"
-  | "guia";
+  | "guia"
+  | "video"
+  | "recurso";
+
+export type RecursoTipo = "documento" | "youtube" | "enlace" | "otro";
 
 export interface Profile {
   id: string;
@@ -29,8 +33,26 @@ export interface Modulo {
   titulo: string;
   descripcion: string;
   semanas: number;
+  activo?: boolean;
+  orden?: number;
 }
 
+export interface Recurso {
+  id: string;
+  modulo_id: number;
+  titulo: string;
+  descripcion: string | null;
+  tipo: RecursoTipo;
+  categoria: MaterialCategory;
+  url: string | null;
+  storage_path: string | null;
+  archivo_nombre: string | null;
+  semana: number | null;
+  orden: number;
+  activo: boolean;
+}
+
+/** @deprecated Usar Recurso — compatibilidad con catálogo local */
 export interface Material {
   id: string;
   modulo_id: number;
