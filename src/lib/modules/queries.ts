@@ -91,11 +91,15 @@ function mapModulo(row: Record<string, unknown>): Modulo {
 }
 
 function mapCarpeta(row: Record<string, unknown>): ModuloCarpeta {
+  const visible = Array.isArray(row.visible_para)
+    ? (row.visible_para as string[])
+    : undefined;
   return {
     id: String(row.id),
     modulo_id: Number(row.modulo_id),
     nombre: String(row.nombre),
     orden: Number(row.orden ?? 0),
+    visible_para: visible,
   };
 }
 

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   BookOpen,
-  Building2,
   GraduationCap,
   LayoutDashboard,
   LogOut,
@@ -53,7 +52,7 @@ function getNavItems(role: UserRole) {
 
   if (role === "admin") {
     common.push(
-      { href: "/dashboard/admin/sedes", label: "Sedes", icon: Building2 },
+      { href: "/dashboard/admin/grupos", label: "Grupos", icon: Users },
       { href: "/dashboard/admin/modulos", label: "Módulos", icon: BookOpen },
     );
   }

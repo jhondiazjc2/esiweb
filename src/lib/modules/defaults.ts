@@ -23,6 +23,10 @@ export function defaultCarpetasForModulo(moduloId: number): ModuloCarpeta[] {
     modulo_id: moduloId,
     nombre,
     orden: index + 1,
+    visible_para:
+      nombre === "Documentos facilitador"
+        ? ["facilitador", "admin"]
+        : ["estudiante", "facilitador", "admin"],
   }));
 }
 
