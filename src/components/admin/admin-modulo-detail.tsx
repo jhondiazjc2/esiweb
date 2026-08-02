@@ -7,11 +7,9 @@ import {
   updateModulo,
 } from "@/app/dashboard/admin/modulos/actions";
 import type { ActionState } from "@/app/dashboard/admin/modulos/types";
-import {
-  CreateRecursoForm,
-  RecursosAdminList,
-} from "@/components/admin/recursos-manager";
-import type { Modulo, Recurso } from "@/lib/types";
+import { ModuloRecursosSections } from "@/components/modules/modulo-recursos-sections";
+import { groupRecursosByCarpetas } from "@/lib/modules/defaults";
+import type { Modulo, ModuloCarpeta, Recurso } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -124,12 +122,19 @@ function DeleteModuloForm({ moduloId }: { moduloId: number }) {
 export function AdminModuloDetail({
   modulo,
   recursos,
+  carpetas,
 }: {
   modulo: Modulo;
   recursos: Recurso[];
+  carpetas: ModuloCarpeta[];
 }) {
+  const secciones = groupRecursosByCarpetas(carpetas, recursos, {
+    includeEmpty: true,
+    includeOrphans: true,
+  });
+
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <div>
         <Link
           href="/dashboard/admin/modulos"
@@ -141,19 +146,23 @@ export function AdminModuloDetail({
           Módulo {modulo.id}: {modulo.titulo}
         </h1>
         <p className="mt-1 text-muted-foreground">
-          Administra documentos, YouTube y enlaces
+          Administra carpetas, documentos, YouTube y enlaces
         </p>
+        <Link
+          href={`/dashboard/modulos/${modulo.id}`}
+          className="mt-2 inline-block text-sm text-primary hover:underline"
+        >
+          Ver como estudiante →
+        </Link>
       </div>
 
       <ModuloEditForm modulo={modulo} />
-      <CreateRecursoForm moduloId={modulo.id} />
 
-      <div className="space-y-3">
-        <h2 className="text-lg font-semibold">
-          Recursos ({recursos.length})
-        </h2>
-        <RecursosAdminList recursos={recursos} moduloId={modulo.id} />
-      </div>
+      <ModuloRecursosSections
+        secciones={secciones}
+        moduloId={modulo.id}
+        editable
+      />
 
       <DeleteModuloForm moduloId={modulo.id} />
     </div>

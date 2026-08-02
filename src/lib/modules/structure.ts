@@ -1,21 +1,9 @@
 import "server-only";
 import { mkdir } from "fs/promises";
 import path from "path";
-import {
-  categoryLabels,
-  seccionOrder,
-} from "@/lib/data/modulos";
+import { DEFAULT_CARPETA_NOMBRES } from "@/lib/modules/defaults";
 import type { MaterialCategory } from "@/lib/types";
-
-/** Subcarpetas estándar de cada módulo */
-export const MODULO_SECCION_FOLDERS: Record<
-  (typeof seccionOrder)[number],
-  string
-> = {
-  material_estudio: "Material de estudio",
-  formato: "Formatos",
-  documento_facilitador: "Documentos facilitador",
-};
+import { CATEGORIA_TO_CARPETA } from "@/lib/modules/defaults";
 
 export function moduloFolderName(moduloId: number) {
   // El módulo 1 histórico vive en "Modulo I"
@@ -24,33 +12,36 @@ export function moduloFolderName(moduloId: number) {
 }
 
 export function seccionFolderName(categoria: MaterialCategory) {
-  if (categoria in MODULO_SECCION_FOLDERS) {
-    return MODULO_SECCION_FOLDERS[
-      categoria as keyof typeof MODULO_SECCION_FOLDERS
-    ];
-  }
-  return null;
+  return CATEGORIA_TO_CARPETA[categoria] ?? null;
+}
+
+function materialRoot() {
+  return (
+    process.env.LOCAL_MATERIAL_ROOT ??
+    path.join(/* turbopackIgnore: true */ process.cwd())
+  );
 }
 
 /** Crea en disco: Modulo N/{Material de estudio,Formatos,Documentos facilitador} */
 export async function ensureModuloFolderStructure(moduloId: number) {
-  const root =
-    process.env.LOCAL_MATERIAL_ROOT ??
-    path.join(/* turbopackIgnore: true */ process.cwd());
-  const moduloDir = path.join(root, moduloFolderName(moduloId));
+  const moduloDir = path.join(materialRoot(), moduloFolderName(moduloId));
 
-  for (const seccion of seccionOrder) {
-    const folder = MODULO_SECCION_FOLDERS[seccion];
+  for (const folder of DEFAULT_CARPETA_NOMBRES) {
     await mkdir(path.join(moduloDir, folder), { recursive: true });
   }
 
   return moduloDir;
 }
 
-export function seccionLabels() {
-  return seccionOrder.map((seccion) => ({
-    seccion,
-    folder: MODULO_SECCION_FOLDERS[seccion],
-    titulo: categoryLabels[seccion],
-  }));
+export async function ensureCarpetaFolder(
+  moduloId: number,
+  carpetaNombre: string,
+) {
+  const dir = path.join(
+    materialRoot(),
+    moduloFolderName(moduloId),
+    carpetaNombre,
+  );
+  await mkdir(dir, { recursive: true });
+  return dir;
 }

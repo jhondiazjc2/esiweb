@@ -41,6 +41,13 @@ export interface Modulo {
   orden?: number;
 }
 
+export interface ModuloCarpeta {
+  id: string;
+  modulo_id: number;
+  nombre: string;
+  orden: number;
+}
+
 export interface Recurso {
   id: string;
   modulo_id: number;
@@ -48,6 +55,7 @@ export interface Recurso {
   descripcion: string | null;
   tipo: RecursoTipo;
   categoria: MaterialCategory;
+  carpeta_id: string | null;
   url: string | null;
   storage_path: string | null;
   archivo_nombre: string | null;

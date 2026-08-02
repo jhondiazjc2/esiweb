@@ -107,15 +107,26 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Material no encontrado" }, { status: 404 });
   }
 
-  if (recurso.url && !recurso.storage_path) {
-    return NextResponse.redirect(recurso.url);
+  const externalUrl =
+    recurso.url &&
+    !recurso.url.startsWith("esi-folder:") &&
+    (recurso.url.startsWith("http://") || recurso.url.startsWith("https://"))
+      ? recurso.url
+      : null;
+
+  if (externalUrl && !recurso.storage_path) {
+    return NextResponse.redirect(externalUrl);
   }
 
   let file: { buffer: Buffer; filename: string } | null = null;
 
   if (recurso.storage_path?.startsWith("local:")) {
     file = await readLocalFile(recurso.storage_path);
-  } else if (recurso.storage_path) {
+  } else if (
+    recurso.storage_path &&
+    !recurso.storage_path.startsWith("bind:") &&
+    !recurso.storage_path.startsWith("folder-")
+  ) {
     file = await readStorageFile(recurso.storage_path);
   }
 
