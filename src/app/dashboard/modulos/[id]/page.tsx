@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { RecursoCard } from "@/components/modules/recurso-card";
-import { getModuloById, getRecursosByModulo } from "@/lib/modules/queries";
-import { getSessionProfile } from "@/lib/auth";
+import { ModuloRecursosSections } from "@/components/modules/modulo-recursos-sections";
 import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+  getModuloById,
+  getRecursosByModulo,
+  groupRecursosBySeccion,
+} from "@/lib/modules/queries";
+import { getSessionProfile } from "@/lib/auth";
 import { ButtonLink } from "@/components/ui/button-link";
 
 interface ModuloDetailPageProps {
@@ -29,8 +29,10 @@ export default async function ModuloDetailPage({
 
   if (!disponible) notFound();
 
+  const secciones = groupRecursosBySeccion(recursos);
+
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link
@@ -55,19 +57,7 @@ export default async function ModuloDetailPage({
         )}
       </div>
 
-      {recursos.length === 0 ? (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            El material de este módulo estará disponible próximamente.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-3">
-          {recursos.map((recurso) => (
-            <RecursoCard key={recurso.id} recurso={recurso} />
-          ))}
-        </div>
-      )}
+      <ModuloRecursosSections secciones={secciones} />
     </div>
   );
 }

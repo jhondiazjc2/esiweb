@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import {
   categoriaOptions,
+  categoryLabels,
   tipoLabels,
 } from "@/lib/modules/constants";
 import type { ActionState } from "@/app/dashboard/admin/modulos/types";
@@ -74,12 +75,12 @@ function RecursoFields({
         <Label>Categoría</Label>
         <select
           name="categoria"
-          defaultValue={recurso?.categoria ?? "recurso"}
+          defaultValue={recurso?.categoria ?? "material_estudio"}
           className={fieldClassName()}
         >
           {categoriaOptions.map((c) => (
             <option key={c} value={c}>
-              {c}
+              {categoryLabels[c]}
             </option>
           ))}
         </select>
@@ -170,7 +171,8 @@ export function CreateRecursoForm({ moduloId }: { moduloId: number }) {
       <CardHeader>
         <CardTitle>Agregar recurso</CardTitle>
         <CardDescription>
-          Documentos, videos de YouTube, enlaces u otros materiales
+          Asigna cada documento a una sección: Material de estudio, Formatos o
+          Documentos facilitador
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -13,11 +13,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-function RecursoAction({ recurso }: { recurso: Recurso }) {
+function RecursoAction({
+  recurso,
+  className,
+}: {
+  recurso: Recurso;
+  className?: string;
+}) {
   if (recurso.tipo === "youtube" && recurso.url) {
     return (
-      <ButtonAnchor href={recurso.url} target="_blank" size="sm" variant="outline">
+      <ButtonAnchor
+        href={recurso.url}
+        target="_blank"
+        size="sm"
+        variant="outline"
+        className={className}
+      >
         <Video className="size-4" />
         Ver video
       </ButtonAnchor>
@@ -26,7 +37,13 @@ function RecursoAction({ recurso }: { recurso: Recurso }) {
 
   if (recurso.tipo === "enlace" && recurso.url) {
     return (
-      <ButtonAnchor href={recurso.url} target="_blank" size="sm" variant="outline">
+      <ButtonAnchor
+        href={recurso.url}
+        target="_blank"
+        size="sm"
+        variant="outline"
+        className={className}
+      >
         <ExternalLink className="size-4" />
         Abrir enlace
       </ButtonAnchor>
@@ -40,6 +57,7 @@ function RecursoAction({ recurso }: { recurso: Recurso }) {
         download
         size="sm"
         variant="outline"
+        className={className}
       >
         <Download className="size-4" />
         Descargar
@@ -49,7 +67,13 @@ function RecursoAction({ recurso }: { recurso: Recurso }) {
 
   if (recurso.url) {
     return (
-      <ButtonAnchor href={recurso.url} target="_blank" size="sm" variant="outline">
+      <ButtonAnchor
+        href={recurso.url}
+        target="_blank"
+        size="sm"
+        variant="outline"
+        className={className}
+      >
         <ExternalLink className="size-4" />
         Abrir
       </ButtonAnchor>
@@ -64,7 +88,7 @@ function YoutubeEmbed({ url }: { url: string }) {
   if (!videoId) return null;
 
   return (
-    <div className="mt-4 aspect-video overflow-hidden rounded-lg border">
+    <div className="mt-3 aspect-video overflow-hidden rounded-lg border">
       <iframe
         src={`https://www.youtube.com/embed/${videoId}`}
         title="Video de YouTube"
@@ -76,13 +100,45 @@ function YoutubeEmbed({ url }: { url: string }) {
   );
 }
 
-export function RecursoCard({ recurso }: { recurso: Recurso }) {
+export function RecursoCard({
+  recurso,
+  compact = false,
+}: {
+  recurso: Recurso;
+  compact?: boolean;
+}) {
   const Icon =
     recurso.tipo === "youtube"
       ? Video
       : recurso.tipo === "enlace"
         ? ExternalLink
         : FileText;
+
+  if (compact) {
+    return (
+      <Card size="sm" className="h-full">
+        <CardHeader className="gap-2">
+          <div className="flex items-start gap-2.5">
+            <Icon className="mt-0.5 size-4 shrink-0 text-primary" />
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-sm leading-snug">
+                {recurso.titulo}
+              </CardTitle>
+              {recurso.descripcion && (
+                <CardDescription className="mt-1 line-clamp-2 text-xs">
+                  {recurso.descripcion}
+                </CardDescription>
+              )}
+            </div>
+          </div>
+          {recurso.tipo === "youtube" && recurso.url && (
+            <YoutubeEmbed url={recurso.url} />
+          )}
+          <RecursoAction recurso={recurso} className="w-full" />
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Card>

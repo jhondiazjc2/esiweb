@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import type { ActionState } from "@/app/dashboard/admin/modulos/types";
+import {
+  ensureModuloFolderStructure,
+  seccionFolderName,
+} from "@/lib/modules/structure";
 import { createClient } from "@/lib/supabase/server";
 import type { MaterialCategory, RecursoTipo } from "@/lib/types";
 
@@ -62,8 +66,18 @@ export async function createModulo(
     return { error: error.message };
   }
 
+  try {
+    await ensureModuloFolderStructure(nextId);
+  } catch {
+    // En entornos sin disco local (p. ej. serverless) la UI igual usa las 3 secciones.
+  }
+
   revalidatePath("/dashboard/admin/modulos");
-  return { success: "Módulo creado correctamente." };
+  revalidatePath("/dashboard/modulos");
+  return {
+    success:
+      "Módulo creado con las secciones Material de estudio, Formatos y Documentos facilitador.",
+  };
 }
 
 export async function updateModulo(
@@ -156,7 +170,10 @@ export async function createRecurso(
 
   if (tipo === "documento" && file instanceof File && file.size > 0) {
     archivoNombre = file.name;
-    storagePath = `${moduloId}/${crypto.randomUUID()}-${file.name}`;
+    const seccion = seccionFolderName(categoria);
+    storagePath = seccion
+      ? `${moduloId}/${seccion}/${crypto.randomUUID()}-${file.name}`
+      : `${moduloId}/${crypto.randomUUID()}-${file.name}`;
     const buffer = Buffer.from(await file.arrayBuffer());
     const { error: uploadError } = await supabase.storage
       .from(BUCKET)
@@ -232,7 +249,10 @@ export async function updateRecurso(
       await supabase.storage.from(BUCKET).remove([storagePath]);
     }
     archivoNombre = file.name;
-    storagePath = `${moduloId}/${crypto.randomUUID()}-${file.name}`;
+    const seccion = seccionFolderName(categoria);
+    storagePath = seccion
+      ? `${moduloId}/${seccion}/${crypto.randomUUID()}-${file.name}`
+      : `${moduloId}/${crypto.randomUUID()}-${file.name}`;
     const buffer = Buffer.from(await file.arrayBuffer());
     const { error: uploadError } = await supabase.storage
       .from(BUCKET)

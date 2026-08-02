@@ -52,7 +52,7 @@ export function AboutSection() {
         {features.map((feature) => (
           <Card key={feature.title} className="border-border/60 shadow-none">
             <CardHeader>
-              <feature.icon className="mb-2 size-7 text-[#c69152]" />
+              <feature.icon className="mb-2 size-7 text-primary" />
               <CardTitle className="text-base font-medium">{feature.title}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -191,7 +191,7 @@ export function ModulesSection() {
               key={title}
               className="flex gap-3 rounded-lg border border-border/60 bg-card p-4"
             >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#c69152] text-sm font-medium text-white">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-accent-foreground">
                 {index + 1}
               </span>
               <span className="text-sm font-medium leading-snug">{title}</span>
@@ -247,7 +247,7 @@ export function GroupsSection() {
 
         <p className="mt-8 text-sm text-muted-foreground">
           ¿Interesado en unirte?{" "}
-          <a href="#contacto" className="text-[#c69152] hover:underline">
+          <a href="#contacto" className="text-primary hover:underline">
             Escríbenos
           </a>{" "}
           o habla con el facilitador de la sede más cercana.

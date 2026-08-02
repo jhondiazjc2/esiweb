@@ -61,7 +61,7 @@ export function ContactSection() {
                 href={siteConfig.internationalSite}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#c69152] hover:underline"
+                className="text-primary hover:underline"
               >
                 equippingservantsinternational.com
               </a>

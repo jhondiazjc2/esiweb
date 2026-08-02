@@ -77,7 +77,7 @@ export function HeroSection() {
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink
                 href="/login"
-                className="h-10 border-0 bg-[#c69152] px-6 text-[13px] font-medium uppercase tracking-[0.12em] text-white hover:bg-[#b58248]"
+                className="h-10 border-0 bg-primary px-6 text-[13px] font-medium uppercase tracking-[0.12em] text-primary-foreground hover:bg-primary/85"
               >
                 Acceder al material
                 <ArrowRight className="ml-2 size-4" />

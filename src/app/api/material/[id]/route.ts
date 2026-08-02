@@ -1,4 +1,4 @@
-import { readdir, readFile } from "fs/promises";
+import { readdir, readFile, stat } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
 import { getRecursoById } from "@/lib/modules/queries";
@@ -25,19 +25,52 @@ function contentTypeFor(filename: string) {
   return CONTENT_TYPES[ext] ?? "application/octet-stream";
 }
 
-async function resolveMaterialPath(materialDir: string, archivo: string) {
-  const direct = path.join(materialDir, archivo);
-  try {
-    await readFile(direct);
-    return direct;
-  } catch {
-    const files = await readdir(materialDir);
-    const match = files.find(
-      (file) => file.normalize("NFC") === archivo.normalize("NFC"),
-    );
-    if (!match) return null;
-    return path.join(materialDir, match);
+function nfc(value: string) {
+  return value.normalize("NFC");
+}
+
+async function listFilesRecursive(dir: string): Promise<string[]> {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files: string[] = [];
+
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listFilesRecursive(full)));
+    } else if (entry.isFile()) {
+      files.push(full);
+    }
   }
+
+  return files;
+}
+
+async function resolveMaterialPath(materialDir: string, archivo: string) {
+  const normalized = archivo.replace(/\\/g, "/");
+  const segments = normalized.split("/").filter(Boolean);
+  const candidate = path.join(materialDir, ...segments);
+
+  try {
+    const info = await stat(candidate);
+    if (info.isFile()) return candidate;
+  } catch {
+    // fall through to fuzzy match
+  }
+
+  const targetRel = nfc(normalized);
+  const targetBase = nfc(path.basename(normalized));
+  const files = await listFilesRecursive(materialDir);
+
+  const byRelative = files.find((file) => {
+    const rel = path.relative(materialDir, file).split(path.sep).join("/");
+    return nfc(rel) === targetRel;
+  });
+  if (byRelative) return byRelative;
+
+  const byBasename = files.find(
+    (file) => nfc(path.basename(file)) === targetBase,
+  );
+  return byBasename ?? null;
 }
 
 async function readLocalFile(storagePath: string) {

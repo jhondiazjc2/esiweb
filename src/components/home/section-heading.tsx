@@ -1,6 +1,6 @@
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[13px] font-medium uppercase tracking-[0.18em] text-[#c69152]">
+    <p className="text-[13px] font-medium uppercase tracking-[0.18em] text-accent">
       {children}
     </p>
   );
@@ -31,7 +31,7 @@ export function SectionIntro({
 }) {
   return (
     <p
-      className={`mt-3 text-[15px] leading-relaxed text-[#717171] sm:text-base ${className ?? ""}`}
+      className={`mt-3 text-[15px] leading-relaxed text-muted-foreground sm:text-base ${className ?? ""}`}
     >
       {children}
     </p>

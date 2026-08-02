@@ -7,9 +7,20 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import type { Modulo, Recurso, RecursoTipo } from "@/lib/types";
 
-export { categoryLabels, categoriaOptions, extractYoutubeId, tipoLabels } from "@/lib/modules/constants";
+export {
+  categoryLabels,
+  categoriaOptions,
+  extractYoutubeId,
+  groupRecursosBySeccion,
+  seccionOrder,
+  tipoLabels,
+} from "@/lib/modules/constants";
 
 function staticRecursoFromMaterial(m: (typeof materialesModulo1)[number]): Recurso {
+  const archivoNombre = m.archivo.includes("/")
+    ? m.archivo.slice(m.archivo.lastIndexOf("/") + 1)
+    : m.archivo;
+
   return {
     id: m.id,
     modulo_id: m.modulo_id,
@@ -19,7 +30,7 @@ function staticRecursoFromMaterial(m: (typeof materialesModulo1)[number]): Recur
     categoria: m.categoria,
     url: null,
     storage_path: `local:${m.archivo}`,
-    archivo_nombre: m.archivo,
+    archivo_nombre: archivoNombre,
     semana: m.semana,
     orden: m.orden,
     activo: true,

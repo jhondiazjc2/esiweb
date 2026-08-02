@@ -24,7 +24,8 @@ export function CreateModuloForm() {
       <CardHeader>
         <CardTitle>Agregar módulo</CardTitle>
         <CardDescription>
-          Crea un nuevo semestre o unidad del programa ESI
+          Cada módulo se crea con las secciones Material de estudio, Formatos y
+          Documentos facilitador
         </CardDescription>
       </CardHeader>
       <CardContent>

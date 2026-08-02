@@ -1,12 +1,16 @@
 export type UserRole = "estudiante" | "facilitador" | "admin";
 
 export type MaterialCategory =
+  | "material_estudio"
+  | "formato"
+  | "documento_facilitador"
+  | "video"
+  | "recurso"
+  /** @deprecated Categorías anteriores — se mantienen por compatibilidad con datos existentes */
   | "cronograma"
   | "paquete"
   | "lectura"
-  | "guia"
-  | "video"
-  | "recurso";
+  | "guia";
 
 export type RecursoTipo = "documento" | "youtube" | "enlace" | "otro";
 
@@ -59,6 +63,7 @@ export interface Material {
   titulo: string;
   descripcion: string | null;
   categoria: MaterialCategory;
+  /** Ruta relativa dentro de Modulo I, p. ej. "Material de estudio/archivo.pdf" */
   archivo: string;
   semana: number | null;
   orden: number;

@@ -46,8 +46,8 @@ function NavAnchor({
         onNavigate(sectionId);
       }}
       className={cn(
-        "rounded-md px-3 py-2 text-[13px] font-medium uppercase tracking-[0.08em] transition-colors hover:text-[#c69152]",
-        active ? "text-[#c69152]" : "text-[#717171]",
+        "rounded-md px-3 py-2 text-[13px] font-medium uppercase tracking-[0.08em] transition-colors hover:text-primary",
+        active ? "text-primary" : "text-muted-foreground",
       )}
     >
       {label}
@@ -120,7 +120,7 @@ export function SiteHeader() {
           <ButtonLink
             href="/login"
             size="sm"
-            className="ml-2 border-0 bg-[#c69152] text-[13px] uppercase tracking-[0.08em] text-white hover:bg-[#b58248]"
+            className="ml-2 border-0 bg-primary text-[13px] uppercase tracking-[0.08em] text-primary-foreground hover:bg-primary/85"
           >
             Ingresar
           </ButtonLink>
